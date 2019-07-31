@@ -1,0 +1,433 @@
+BEGIN TRANSACTION;
+CREATE TABLE IF NOT EXISTS "product_tb" (
+	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	"product_name"	TEXT NOT NULL,
+	"product_codetemp"	TEXT,
+	"price"	TEXT,
+	"quantity"	INTEGER,
+	"category_id"	INTEGER NOT NULL DEFAULT 0,
+	"user_id"	INTEGER NOT NULL DEFAULT 0,
+	"date_created"	datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	"last_updated"	datetime,
+	"pt_deleted"	tinyint DEFAULT NULL
+);
+CREATE TABLE IF NOT EXISTS "addons_tb" (
+	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	"addons_name"	TEXT NOT NULL,
+	"addons_codetemp"	TEXT,
+	"price"	TEXT,
+	"quantity"	INTEGER,
+	"user_id"	INTEGER NOT NULL DEFAULT 0,
+	"date_created"	datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	"last_updated"	datetime,
+	"at_deleted"	tinyint DEFAULT NULL
+);
+CREATE TABLE IF NOT EXISTS "transaction_tb" (
+	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	"user_id"	INTEGER NOT NULL DEFAULT 0,
+	"cash_tender"	TEXT NOT NULL,
+	"total_amt"	TEXT NOT NULL,
+	"date_created"	datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	"last_updated"	datetime,
+	"tt_voided"	tinyint DEFAULT NULL,
+	"tt_completed"	tinyint DEFAULT NULL,
+	"customer_name"	TEXT
+);
+CREATE TABLE IF NOT EXISTS "branch_tb" (
+	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	"branch_name"	TEXT NOT NULL,
+	"branch_city"	TEXT NOT NULL,
+	"branch_region"	TEXT NOT NULL,
+	"branch_areacode"	TEXT NOT NULL,
+	"branch_postalcode"	TEXT NOT NULL,
+	"branch_country"	TEXT NOT NULL,
+	"date_created"	datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+CREATE TABLE IF NOT EXISTS "users_tb" (
+	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	"username"	TEXT NOT NULL,
+	"fullname"	TEXT NOT NULL,
+	"password"	TEXT NOT NULL,
+	"date_created"	datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	"last_updated"	datetime,
+	"ut_active"	tinyint DEFAULT NULL
+);
+CREATE TABLE IF NOT EXISTS "userslevel_tb" (
+	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	"level_name"	TEXT NOT NULL,
+	"date_created"	datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	"last_updated"	datetime,
+	"ul_deleted"	tinyint DEFAULT NULL
+);
+CREATE TABLE IF NOT EXISTS "usersrole_tb" (
+	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	"user_id"	INTEGER NOT NULL DEFAULT 0,
+	"userlevel_id"	INTEGER NOT NULL DEFAULT 0,
+	"date_created"	datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	"ur_deleted"	tinyint DEFAULT NULL
+);
+CREATE TABLE IF NOT EXISTS "productcode_tb" (
+	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	"codelibrary_id"	INTEGER NOT NULL DEFAULT 0,
+	"product_id"	INTEGER NOT NULL DEFAULT 0,
+	"date_created"	datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	"pc_deleted"	tinyint DEFAULT NULL
+);
+CREATE TABLE IF NOT EXISTS "codelibrary_tb" (
+	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	"code_name"	TEXT NOT NULL,
+	"code_description"	TEXT NOT NULL,
+	"date_created"	datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	"last_updated"	datetime,
+	"cl_deleted"	tinyint DEFAULT NULL
+);
+CREATE TABLE IF NOT EXISTS "transactionitems_tb" (
+	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	"transact_id"	INTEGER NOT NULL DEFAULT 0,
+	"product_id"	INTEGER NOT NULL DEFAULT 0,
+	"quantity"	INTEGER NOT NULL DEFAULT 0,
+	"price"	TEXT NOT NULL,
+	"date_created"	datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	"last_updated"	datetime,
+	"ti_voided"	tinyint DEFAULT NULL
+);
+CREATE TABLE IF NOT EXISTS "category_tb" (
+	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	"category_name"	TEXT NOT NULL,
+	"user_id"	INTEGER NOT NULL DEFAULT 0,
+	"date_created"	datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	"last_updated"	datetime,
+	"ct_deleted"	tinyint DEFAULT NULL
+);
+INSERT INTO "product_tb" VALUES (1,'Tall, Dark & Handsome','TDH','120',1,1,1,'2019-03-18 08:47:58','2019-03-31 04:33:00',NULL);
+INSERT INTO "product_tb" VALUES (2,'White Chick','WC','120',1,1,1,'2019-03-18 08:48:25','2019-03-31 04:40:56',NULL);
+INSERT INTO "product_tb" VALUES (3,'Macchiato','COFMAC','120',16,2,3,'2019-03-18 08:48:49','2019-04-05 15:01:10',NULL);
+INSERT INTO "product_tb" VALUES (4,'Mocha','COFMOC','120',1,2,1,'2019-03-18 08:49:27','2019-03-31 05:35:12',NULL);
+INSERT INTO "product_tb" VALUES (5,'Cappuccino','COFCAP','120',99,2,3,'2019-03-18 08:49:53','2019-04-05 14:56:08',NULL);
+INSERT INTO "product_tb" VALUES (6,'Toffee','COFTOFF','120',1,2,1,'2019-03-18 08:50:13','2019-03-31 05:35:33',NULL);
+INSERT INTO "product_tb" VALUES (7,'Matcha','CBMAT','120',1,2,1,'2019-03-18 08:52:10','2019-03-31 05:35:48',NULL);
+INSERT INTO "product_tb" VALUES (8,'Cookies & Cream','CBCOOK','120',121,2,3,'2019-03-18 08:52:51','2019-04-05 20:45:51',NULL);
+INSERT INTO "product_tb" VALUES (9,'Black Forest','CBBLA','120',99,2,3,'2019-03-18 08:53:25','2019-04-05 14:55:48',NULL);
+INSERT INTO "product_tb" VALUES (10,'Choco Peppermint','CBCHOCP','125',99,2,3,'2019-03-18 08:53:44','2019-04-05 15:00:13',NULL);
+INSERT INTO "product_tb" VALUES (11,'Choco Banana','CBCHOCB','125',99,2,3,'2019-03-18 08:54:10','2019-04-05 14:56:28',NULL);
+INSERT INTO "product_tb" VALUES (12,'Blueberry Graham Cheesecake','CBBLUE','125',99,2,3,'2019-03-18 08:54:30','2019-04-05 14:55:54',NULL);
+INSERT INTO "product_tb" VALUES (13,'Mango Graham Cheesecake','CBMNG','125',111,2,3,'2019-03-18 08:54:55','2019-04-05 15:01:29',NULL);
+INSERT INTO "product_tb" VALUES (14,'Strawberry Oreo Cheesecake','CBSTRAW','125',1,2,1,'2019-03-18 08:55:16','2019-03-31 05:40:26',NULL);
+INSERT INTO "product_tb" VALUES (15,'Original','MTORIG','100',1,3,1,'2019-03-18 08:55:42','2019-03-31 05:40:45',NULL);
+INSERT INTO "product_tb" VALUES (16,'Tiger','Tiger','110',1,3,1,'2019-03-18 08:56:07','2019-03-31 07:02:35',NULL);
+INSERT INTO "product_tb" VALUES (17,'Caramel','MTCAR','110',99,3,3,'2019-03-18 08:56:23','2019-04-05 14:56:16',NULL);
+INSERT INTO "product_tb" VALUES (18,'Hazelnut','MTHAZ','110',1,3,1,'2019-03-18 08:56:41','2019-03-31 06:48:08',NULL);
+INSERT INTO "product_tb" VALUES (19,'Taro','MTTAR','110',1,3,1,'2019-03-18 08:56:59','2019-03-31 06:48:14',NULL);
+INSERT INTO "product_tb" VALUES (20,'Wintermelon','MTWIN','110',1,3,1,'2019-03-18 08:57:15','2019-03-31 06:48:43',NULL);
+INSERT INTO "product_tb" VALUES (21,'Toffee','MTTOF','110',1,3,1,'2019-03-18 08:57:32','2019-03-31 06:48:35',NULL);
+INSERT INTO "product_tb" VALUES (22,'Hokkaido','MTHOK','115',1,3,1,'2019-03-18 08:57:51','2019-03-31 06:48:52',NULL);
+INSERT INTO "product_tb" VALUES (23,'Okinawa','MTOKI','115',1,3,1,'2019-03-18 08:58:11','2019-03-31 06:49:05',NULL);
+INSERT INTO "product_tb" VALUES (24,'Chocolate','MTCHOC','115',123,3,3,'2019-03-18 08:58:27','2019-04-05 15:00:19',NULL);
+INSERT INTO "product_tb" VALUES (25,'Matcha','MTMAT','115',1,3,1,'2019-03-18 08:58:43','2019-03-31 06:49:24',NULL);
+INSERT INTO "product_tb" VALUES (26,'Thai','MTTHAI','115',1,3,1,'2019-03-18 08:58:57','2019-03-31 06:49:32',NULL);
+INSERT INTO "product_tb" VALUES (27,'Classic Honey','LEMHON','90',44,4,3,'2019-03-18 09:02:34','2019-04-05 15:00:59',NULL);
+INSERT INTO "product_tb" VALUES (28,'Lychee','LEMLYC','90',1,4,1,'2019-03-18 09:02:56','2019-03-31 06:50:39',NULL);
+INSERT INTO "product_tb" VALUES (29,'Passion Fruit','LEMPASS','90',1,4,1,'2019-03-18 09:03:16','2019-03-31 06:50:48',NULL);
+INSERT INTO "product_tb" VALUES (30,'Blueberry','LEMBLUE','91',10,4,1,'2019-03-18 09:03:40','2019-04-02 15:38:44',NULL);
+INSERT INTO "product_tb" VALUES (31,'Strawberry','LEMSTRAW','90',1,4,1,'2019-03-18 09:03:56','2019-03-31 06:51:08',NULL);
+INSERT INTO "product_tb" VALUES (32,'Mango','LEMMNG','90',1,4,1,'2019-03-18 09:04:13','2019-03-31 06:51:44',NULL);
+INSERT INTO "product_tb" VALUES (33,'Kiwi','LEMKIWI','90',1,4,1,'2019-03-18 09:04:28','2019-03-31 06:51:52',NULL);
+INSERT INTO "product_tb" VALUES (34,'Green Apple','LEMAPP','90',123,4,3,'2019-03-18 09:04:41','2019-04-05 15:01:23',NULL);
+INSERT INTO "product_tb" VALUES (35,'Classic Cream Puff','CP','20',23,5,3,'2019-03-18 09:05:00','2019-04-05 15:00:48',NULL);
+INSERT INTO "product_tb" VALUES (36,'Oreo Cream Puff','CPO','25',1,5,1,'2019-03-18 09:05:18','2019-03-31 06:52:16',NULL);
+INSERT INTO "product_tb" VALUES (37,'Graham Cream Puff','CPG','25',1,5,1,'2019-03-18 09:05:44','2019-03-31 06:52:23',NULL);
+INSERT INTO "product_tb" VALUES (38,'Classic Choco Mousse','CM','20',133,5,3,'2019-03-18 09:06:02','2019-04-05 15:00:28',NULL);
+INSERT INTO "product_tb" VALUES (39,'Oreo Choco Mousse','CMO','25',1,5,1,'2019-03-18 09:06:23','2019-03-31 06:52:39',NULL);
+INSERT INTO "product_tb" VALUES (40,'Graham Choco Mousse','CMG','25',1,5,1,'2019-03-18 09:06:43','2019-03-31 06:52:49',NULL);
+INSERT INTO "product_tb" VALUES (41,'Pearl','P','15',1,5,1,'2019-03-18 09:07:06','2019-03-31 06:52:56',NULL);
+INSERT INTO "product_tb" VALUES (42,'Crystals','C','15',1,5,1,'2019-03-18 09:07:20','2019-03-31 06:53:14',NULL);
+INSERT INTO "product_tb" VALUES (43,'Yakult','Y','15',1,5,1,'2019-03-18 09:07:37','2019-03-31 06:53:19',NULL);
+INSERT INTO "product_tb" VALUES (44,'Popping Boba','PB','20',1,5,1,'2019-03-18 09:07:53','2019-03-31 06:53:26',NULL);
+INSERT INTO "product_tb" VALUES (45,'Shawarma Panizza','Shawarma Panizza','59',10000,6,3,'2019-03-18 09:09:14','2019-04-05 15:00:36',NULL);
+INSERT INTO "product_tb" VALUES (46,'Cheesy Fries','Cheesy Fries','59',99,6,3,'2019-03-18 09:09:45','2019-04-05 15:00:08',NULL);
+INSERT INTO "product_tb" VALUES (47,'Meaty Nachos','Meaty Nachos','59',1,6,1,'2019-03-18 09:32:22','2019-03-31 07:01:33',NULL);
+INSERT INTO "product_tb" VALUES (48,'Mud Cake','Mud Cake','60',1,6,1,'2019-03-18 09:32:41','2019-03-31 07:01:25',NULL);
+INSERT INTO "product_tb" VALUES (49,'Cake for the Soul','Cake for the Soul','75',122,6,3,'2019-03-18 09:33:00','2019-04-05 14:56:02',NULL);
+INSERT INTO "product_tb" VALUES (50,'Famous Cake','Famous Cake','80',99,6,3,'2019-03-18 09:33:21','2019-04-05 14:56:46',NULL);
+INSERT INTO "product_tb" VALUES (51,'Cloud Cake','Cloud Cake','85',99,6,3,'2019-03-18 09:33:41','2019-04-05 14:56:39',NULL);
+INSERT INTO "product_tb" VALUES (52,'Tall, Dark & Handsome (Over Ice)','TDH + OI','120',1,5,1,'2019-03-31 04:34:29','2019-03-31 06:56:34',NULL);
+INSERT INTO "product_tb" VALUES (53,'Tall, Dark & Handsome (Over Ice with Choco Mousse)','TDH + OI + CM','120',1,1,1,'2019-03-31 04:35:06','2019-03-31 05:22:02',NULL);
+INSERT INTO "product_tb" VALUES (54,'Tall, Dark & Handsome (with Choco Mousse)','TDH + CM','120',1,1,1,'2019-03-31 04:36:28','2019-03-31 05:22:05',NULL);
+INSERT INTO "product_tb" VALUES (55,'Tall, Dark & Handsome (Ice Blend)','TDH + IB','120',1,1,1,'2019-03-31 04:37:25','2019-04-04 01:44:43',1);
+INSERT INTO "product_tb" VALUES (56,'Tall, Dark & Handsome (Ice Blend with Choco Ice Cream)','TDH + IB + CIC','120',1,1,1,'2019-03-31 04:38:36','2019-04-04 01:44:35',1);
+INSERT INTO "product_tb" VALUES (57,'Tall, Dark & Handsome (with Choco Ice Cream)','TDH + CIC','120',1,1,1,'2019-03-31 04:39:30','2019-04-04 01:45:00',1);
+INSERT INTO "product_tb" VALUES (58,'White Chick (Over Ice)','WC + OI','120',1,1,1,'2019-03-31 04:40:29','2019-03-31 04:41:24',NULL);
+INSERT INTO "product_tb" VALUES (59,'White Chick (Over Ice with Cream Puff)','WC + OI + CP','120',1,1,1,'2019-03-31 04:41:28','2019-03-31 04:42:06',NULL);
+INSERT INTO "product_tb" VALUES (60,'White Chick (with Cream Puff)','WC + CP','120',1,1,1,'2019-03-31 04:42:29','2019-03-31 04:43:01',NULL);
+INSERT INTO "product_tb" VALUES (61,'White Chick (Ice Blend)','WC + IB','120',1,1,1,'2019-03-31 04:43:05','2019-04-04 01:45:19',1);
+INSERT INTO "product_tb" VALUES (62,'White Chick (Ice Blend with Vanilla Ice Cream)','WC + IB + VIC','120',1,1,1,'2019-03-31 04:44:06','2019-04-04 01:45:14',1);
+INSERT INTO "product_tb" VALUES (63,'White Chick (with Vanilla Ice Cream)','WC + VIC','120',1,1,1,'2019-03-31 04:44:43','2019-04-04 01:45:28',1);
+INSERT INTO "product_tb" VALUES (64,'Cups','Cups','0',99,0,1,'2019-03-31 07:06:05','2019-03-31 07:06:39',NULL);
+INSERT INTO "product_tb" VALUES (65,'Large Cups','Large Cups','0',77,0,0,'2019-03-31 16:56:49',NULL,NULL);
+INSERT INTO "product_tb" VALUES (66,'Ice Muffin','IM Test','10',15,7,0,'2019-03-31 17:06:31','2019-04-01 15:19:40',1);
+INSERT INTO "transaction_tb" VALUES (4,1,'400','360','2019-03-20 07:21:01','2019-04-01 16:36:32',NULL,1,NULL);
+INSERT INTO "transaction_tb" VALUES (5,1,'500','467','2019-03-20 08:28:11','2019-04-01 16:36:32',NULL,1,NULL);
+INSERT INTO "transaction_tb" VALUES (6,1,'500','375','2019-03-20 08:30:01','2019-04-01 16:36:32',NULL,1,NULL);
+INSERT INTO "transaction_tb" VALUES (7,1,'500','425','2019-03-20 08:31:11','2019-04-01 16:36:32',NULL,1,NULL);
+INSERT INTO "transaction_tb" VALUES (8,1,'900','612','2019-03-21 06:21:23','2019-04-01 16:36:32',NULL,1,NULL);
+INSERT INTO "transaction_tb" VALUES (9,1,'150','115','2019-03-21 06:26:42','2019-04-01 16:36:32',NULL,1,NULL);
+INSERT INTO "transaction_tb" VALUES (10,1,'400','395','2019-03-21 06:30:59','2019-04-01 16:36:32',NULL,1,NULL);
+INSERT INTO "transaction_tb" VALUES (11,1,'120','115','2019-03-21 10:05:38','2019-04-01 16:36:32',NULL,1,NULL);
+INSERT INTO "transaction_tb" VALUES (12,1,'400','320','2019-03-22 07:43:58','2019-04-01 16:36:32',NULL,1,NULL);
+INSERT INTO "transaction_tb" VALUES (13,1,'130','118.00','2019-03-22 07:44:16','2019-04-01 16:36:32',NULL,1,NULL);
+INSERT INTO "transaction_tb" VALUES (14,1,'220','214.00','2019-03-22 07:44:55','2019-04-01 16:36:32',NULL,1,NULL);
+INSERT INTO "transaction_tb" VALUES (15,1,'140','130.00','2019-03-22 07:45:28','2019-04-01 16:36:32',NULL,1,NULL);
+INSERT INTO "transaction_tb" VALUES (16,1,'300','270.00','2019-03-22 07:45:42','2019-04-01 16:36:32',NULL,1,NULL);
+INSERT INTO "transaction_tb" VALUES (17,1,'150','140.00','2019-03-22 09:34:29','2019-04-01 16:36:32',NULL,1,NULL);
+INSERT INTO "transaction_tb" VALUES (18,1,'400','325.00','2019-03-22 09:49:45','2019-04-01 16:36:32',NULL,1,NULL);
+INSERT INTO "transaction_tb" VALUES (19,1,'400','375.00','2019-03-22 09:50:49','2019-04-01 16:36:32',NULL,1,NULL);
+INSERT INTO "transaction_tb" VALUES (20,1,'281.00','280.00','2019-03-22 09:54:49','2019-04-01 16:36:32',NULL,1,NULL);
+INSERT INTO "transaction_tb" VALUES (21,1,'50','40.00','2019-03-22 09:56:56','2019-04-01 16:36:32',NULL,1,NULL);
+INSERT INTO "transaction_tb" VALUES (22,1,'120','120.00','2019-03-22 09:57:53','2019-04-01 16:36:32',NULL,1,NULL);
+INSERT INTO "transaction_tb" VALUES (23,1,'250','210.00','2019-03-22 17:07:52','2019-04-01 16:36:32',NULL,1,NULL);
+INSERT INTO "transaction_tb" VALUES (24,1,'400','345.00','2019-03-23 02:11:30','2019-04-01 16:36:32',NULL,1,NULL);
+INSERT INTO "transaction_tb" VALUES (25,1,'300','270.00','2019-03-23 02:12:17','2019-04-01 16:36:32',NULL,1,'Peter');
+INSERT INTO "transaction_tb" VALUES (26,1,'120','120','2019-03-30 09:25:19','2019-04-01 16:36:32',NULL,1,'Phil');
+INSERT INTO "transaction_tb" VALUES (27,1,'240','240','2019-03-30 09:26:01','2019-04-01 16:36:32',NULL,1,'Anna');
+INSERT INTO "transaction_tb" VALUES (28,1,'200','180','2019-03-30 09:26:32','2019-04-01 16:36:32',NULL,1,'Mikey');
+INSERT INTO "transaction_tb" VALUES (29,1,'110','110','2019-03-30 09:49:55','2019-04-01 16:36:32',NULL,1,'Pedro');
+INSERT INTO "transaction_tb" VALUES (30,1,'90','90','2019-03-30 14:58:07','2019-04-01 16:36:32',NULL,1,'Gaz');
+INSERT INTO "transaction_tb" VALUES (31,1,'120','120','2019-03-30 14:59:36','2019-04-01 16:36:32',NULL,1,'Gaz');
+INSERT INTO "transaction_tb" VALUES (32,1,'90','90','2019-03-30 16:01:00','2019-04-01 16:36:32',NULL,1,'Louie');
+INSERT INTO "transaction_tb" VALUES (33,1,'90','90','2019-03-30 16:01:10','2019-04-01 16:36:32',NULL,1,'');
+INSERT INTO "transaction_tb" VALUES (34,1,'250','250','2019-03-30 16:03:35','2019-04-01 16:36:32',NULL,1,'Elliy');
+INSERT INTO "transaction_tb" VALUES (35,1,'500','480','2019-03-31 04:49:20','2019-04-01 16:37:33',1,NULL,'Bernadine');
+INSERT INTO "transaction_tb" VALUES (36,1,'200','180','2019-03-31 12:34:21','2019-03-31 12:34:32',NULL,1,'Diego');
+INSERT INTO "transaction_tb" VALUES (37,1,'350','330','2019-03-31 12:37:42','2019-03-31 12:37:59',NULL,1,'Melody');
+INSERT INTO "transaction_tb" VALUES (38,1,'120','120','2019-04-01 09:49:02','2019-04-01 16:37:33',1,NULL,'Aya');
+INSERT INTO "transaction_tb" VALUES (39,1,'180','175','2019-04-01 10:17:43','2019-04-01 16:37:33',1,NULL,'Marie');
+INSERT INTO "transaction_tb" VALUES (40,1,'130','125','2019-04-01 13:32:10','2019-04-01 16:36:32',NULL,1,'Troy');
+INSERT INTO "transaction_tb" VALUES (41,1,'150','120','2019-04-02 15:07:31',NULL,NULL,NULL,'Maria');
+INSERT INTO "transaction_tb" VALUES (42,1,'60','59','2019-04-02 15:22:52','2019-04-02 15:26:58',1,NULL,'Sam');
+INSERT INTO "transaction_tb" VALUES (43,1,'60','59','2019-04-02 15:22:52','2019-04-02 15:28:15',1,NULL,'Sam');
+INSERT INTO "transaction_tb" VALUES (44,3,'200','182','2019-04-02 15:38:44',NULL,NULL,NULL,'Trevor');
+INSERT INTO "transaction_tb" VALUES (45,3,'250','240','2019-04-05 20:45:51','2019-04-05 20:46:57',NULL,1,'Leo');
+INSERT INTO "users_tb" VALUES (1,'admin','Administrator','098f6bcd4621d373cade4e832627b4f6','2019-03-21 09:49:01','2019-04-01 16:14:45',NULL);
+INSERT INTO "users_tb" VALUES (2,'guest','Mikey','098f6bcd4621d373cade4e832627b4f6','2019-03-31 15:00:10','2019-04-02 15:07:02',NULL);
+INSERT INTO "users_tb" VALUES (3,'test','Pedro','098f6bcd4621d373cade4e832627b4f6','2019-04-01 16:05:24','2019-04-02 15:06:40',NULL);
+INSERT INTO "userslevel_tb" VALUES (1,'Administrator','2019-03-21 09:49:28','2019-03-21 09:49:34',NULL);
+INSERT INTO "productcode_tb" VALUES (1,2,1,'2019-03-21 09:33:20',NULL);
+INSERT INTO "productcode_tb" VALUES (2,4,1,'2019-03-21 09:33:44',NULL);
+INSERT INTO "productcode_tb" VALUES (3,45,1,'2019-03-21 09:34:02',NULL);
+INSERT INTO "productcode_tb" VALUES (4,5,1,'2019-03-21 09:34:25',NULL);
+INSERT INTO "productcode_tb" VALUES (5,48,1,'2019-03-21 09:34:50',NULL);
+INSERT INTO "productcode_tb" VALUES (6,4,2,'2019-03-21 09:35:11',NULL);
+INSERT INTO "productcode_tb" VALUES (7,5,2,'2019-03-21 09:35:42',NULL);
+INSERT INTO "productcode_tb" VALUES (8,3,2,'2019-03-21 09:35:57',NULL);
+INSERT INTO "productcode_tb" VALUES (9,42,2,'2019-03-21 09:36:28',NULL);
+INSERT INTO "productcode_tb" VALUES (10,49,2,'2019-03-21 09:36:34',NULL);
+INSERT INTO "codelibrary_tb" VALUES (1,'BLS','Bunny''s Little Secrets','2019-03-21 09:04:58',NULL,NULL);
+INSERT INTO "codelibrary_tb" VALUES (2,'TDH','Tall Dark & Handsome','2019-03-21 09:05:34',NULL,NULL);
+INSERT INTO "codelibrary_tb" VALUES (3,'WC','White Chick','2019-03-21 09:05:48',NULL,NULL);
+INSERT INTO "codelibrary_tb" VALUES (4,'OI','Over Ice','2019-03-21 09:05:59',NULL,NULL);
+INSERT INTO "codelibrary_tb" VALUES (5,'IB','Ice Blend','2019-03-21 09:06:13',NULL,NULL);
+INSERT INTO "codelibrary_tb" VALUES (6,'MT','Milktea Series with Pearl','2019-03-21 09:06:32',NULL,NULL);
+INSERT INTO "codelibrary_tb" VALUES (7,'MTORIG','Original Milktea with Pearl','2019-03-21 09:06:50',NULL,NULL);
+INSERT INTO "codelibrary_tb" VALUES (8,'MTCAR','Caramel Milktea with Pearl','2019-03-21 09:07:11',NULL,NULL);
+INSERT INTO "codelibrary_tb" VALUES (9,'MTHAZ','Hazelnut Milktea with Pearl','2019-03-21 09:07:30',NULL,NULL);
+INSERT INTO "codelibrary_tb" VALUES (10,'MTTAR','Taro Milktea with Pearl','2019-03-21 09:08:42',NULL,NULL);
+INSERT INTO "codelibrary_tb" VALUES (11,'MTTOF','Toffee Milktea with Pearl','2019-03-21 09:09:00',NULL,NULL);
+INSERT INTO "codelibrary_tb" VALUES (12,'MTWIN','Wintermelon Milktea with Pearl','2019-03-21 09:09:18',NULL,NULL);
+INSERT INTO "codelibrary_tb" VALUES (13,'MTHOK','Hokkaidou Milktea with Pearl','2019-03-21 09:09:41',NULL,NULL);
+INSERT INTO "codelibrary_tb" VALUES (14,'MTOKI','Okinawa Milktea with Pearl','2019-03-21 09:10:04',NULL,NULL);
+INSERT INTO "codelibrary_tb" VALUES (15,'MTCHOC','Chocolate Milktea with Pearl','2019-03-21 09:10:22',NULL,NULL);
+INSERT INTO "codelibrary_tb" VALUES (16,'MTMAT','Matcha Milktea with Pearl','2019-03-21 09:10:37',NULL,NULL);
+INSERT INTO "codelibrary_tb" VALUES (17,'MTTHAI','Thai Milktea with Pearl','2019-03-21 09:11:08',NULL,NULL);
+INSERT INTO "codelibrary_tb" VALUES (18,'BS','Bunny Shakers','2019-03-21 09:11:22',NULL,NULL);
+INSERT INTO "codelibrary_tb" VALUES (19,'COF','Coffee Based','2019-03-21 09:11:32',NULL,NULL);
+INSERT INTO "codelibrary_tb" VALUES (20,'COFMAC','Macchiato Coffee','2019-03-21 09:11:43',NULL,NULL);
+INSERT INTO "codelibrary_tb" VALUES (21,'COFMOC','Mocha Coffee','2019-03-21 09:12:05',NULL,NULL);
+INSERT INTO "codelibrary_tb" VALUES (22,'COFCAP','Cappuccino Coffee','2019-03-21 09:12:28',NULL,NULL);
+INSERT INTO "codelibrary_tb" VALUES (23,'COFTOFF','Toffee Coffee','2019-03-21 09:12:52',NULL,NULL);
+INSERT INTO "codelibrary_tb" VALUES (24,'CB','Cream Based','2019-03-21 09:15:27',NULL,NULL);
+INSERT INTO "codelibrary_tb" VALUES (25,'CBBLA','Black Forest','2019-03-21 09:21:49',NULL,NULL);
+INSERT INTO "codelibrary_tb" VALUES (26,'CBMAT','Matcha','2019-03-21 09:22:03',NULL,NULL);
+INSERT INTO "codelibrary_tb" VALUES (27,'CBCHOCP','Choco Peppermint','2019-03-21 09:22:19',NULL,NULL);
+INSERT INTO "codelibrary_tb" VALUES (28,'CBSTRAW','Strawberry Cheesecake','2019-03-21 09:23:42',NULL,NULL);
+INSERT INTO "codelibrary_tb" VALUES (29,'CBBLUE','Blueberry Cheesecake','2019-03-21 09:24:03',NULL,NULL);
+INSERT INTO "codelibrary_tb" VALUES (30,'CBMNG','Mango Graham','2019-03-21 09:24:46',NULL,NULL);
+INSERT INTO "codelibrary_tb" VALUES (31,'CBCHOCB','Choco Banana','2019-03-21 09:24:59',NULL,NULL);
+INSERT INTO "codelibrary_tb" VALUES (32,'CBCOOK','Cookies and Cream','2019-03-21 09:25:14',NULL,NULL);
+INSERT INTO "codelibrary_tb" VALUES (33,'LEM','Lemonade Collections','2019-03-21 09:25:35',NULL,NULL);
+INSERT INTO "codelibrary_tb" VALUES (34,'LEMBLUE','Blueberry Lemonade','2019-03-21 09:25:46',NULL,NULL);
+INSERT INTO "codelibrary_tb" VALUES (35,'LEMHON','Honey Lemonade','2019-03-21 09:26:09',NULL,NULL);
+INSERT INTO "codelibrary_tb" VALUES (36,'LEMAPP','Green Apple Lemonade','2019-03-21 09:26:20',NULL,NULL);
+INSERT INTO "codelibrary_tb" VALUES (37,'LEMKIWI','Kiwi Lemonade','2019-03-21 09:26:33',NULL,NULL);
+INSERT INTO "codelibrary_tb" VALUES (38,'LEMLYC','Lychee Lemonade','2019-03-21 09:26:45',NULL,NULL);
+INSERT INTO "codelibrary_tb" VALUES (39,'LEMMNG','Mango Lemonade','2019-03-21 09:27:00',NULL,NULL);
+INSERT INTO "codelibrary_tb" VALUES (40,'LEMPASS','Passion Fruit Lemonade','2019-03-21 09:27:14',NULL,NULL);
+INSERT INTO "codelibrary_tb" VALUES (41,'LEMSTRAW','Strawberry Lemonade','2019-03-21 09:27:33',NULL,NULL);
+INSERT INTO "codelibrary_tb" VALUES (42,'CP','Classic Cream Puff','2019-03-21 09:27:53',NULL,NULL);
+INSERT INTO "codelibrary_tb" VALUES (43,'CPO','Oreo Cream Puff','2019-03-21 09:28:25',NULL,NULL);
+INSERT INTO "codelibrary_tb" VALUES (44,'CPG','Graham Cream Puff','2019-03-21 09:28:36',NULL,NULL);
+INSERT INTO "codelibrary_tb" VALUES (45,'CM','Choco Mousse','2019-03-21 09:28:50',NULL,NULL);
+INSERT INTO "codelibrary_tb" VALUES (46,'CMO','Oreo Choco Mousse','2019-03-21 09:29:04',NULL,NULL);
+INSERT INTO "codelibrary_tb" VALUES (47,'CMG','Graham Cream Mousse','2019-03-21 09:29:19',NULL,NULL);
+INSERT INTO "codelibrary_tb" VALUES (48,'CIC','Choco Ice Cream','2019-03-21 09:29:47',NULL,NULL);
+INSERT INTO "codelibrary_tb" VALUES (49,'VIC','Vanilla Ice Cream','2019-03-21 09:30:06',NULL,NULL);
+INSERT INTO "codelibrary_tb" VALUES (50,'P','Pearl','2019-03-21 09:30:23',NULL,NULL);
+INSERT INTO "codelibrary_tb" VALUES (51,'C','Crystals','2019-03-21 09:30:31',NULL,NULL);
+INSERT INTO "codelibrary_tb" VALUES (52,'PB','Popping Boba','2019-03-21 09:30:38',NULL,NULL);
+INSERT INTO "codelibrary_tb" VALUES (53,'Y','Yakult','2019-03-21 09:30:49',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (7,4,1,1,'120','2019-03-20 07:21:01',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (8,4,2,2,'120','2019-03-20 07:21:01',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (9,5,14,1,'125','2019-03-20 08:28:11',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (10,5,10,1,'125','2019-03-20 08:28:11',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (11,5,35,2,'20','2019-03-20 08:28:11',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (12,5,46,2,'59','2019-03-20 08:28:11',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (13,5,45,1,'59','2019-03-20 08:28:11',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (14,6,15,1,'100','2019-03-20 08:30:01',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (15,6,16,1,'110','2019-03-20 08:30:01',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (16,6,51,1,'85','2019-03-20 08:30:01',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (17,6,50,1,'80','2019-03-20 08:30:01',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (18,7,41,1,'15','2019-03-20 08:31:11',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (19,7,37,1,'25','2019-03-20 08:31:11',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (20,7,36,1,'25','2019-03-20 08:31:11',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (21,7,4,2,'120','2019-03-20 08:31:11',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (22,7,3,1,'120','2019-03-20 08:31:11',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (23,8,29,1,'90','2019-03-21 06:21:23',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (24,8,27,1,'90','2019-03-21 06:21:23',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (25,8,32,2,'90','2019-03-21 06:21:23',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (26,8,49,1,'75','2019-03-21 06:21:23',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (27,8,46,2,'59','2019-03-21 06:21:23',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (28,8,45,1,'59','2019-03-21 06:21:23',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (29,9,41,1,'15','2019-03-21 06:26:42',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (30,9,15,1,'100','2019-03-21 06:26:42',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (31,10,9,1,'120','2019-03-21 06:30:59',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (32,10,24,2,'115','2019-03-21 06:30:59',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (33,10,41,1,'15','2019-03-21 06:30:59',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (34,10,42,2,'15','2019-03-21 06:30:59',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (35,11,26,1,'115','2019-03-21 10:05:38',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (36,12,17,1,'110','2019-03-22 07:43:58',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (37,12,16,1,'110','2019-03-22 07:43:58',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (38,12,15,1,'100','2019-03-22 07:43:58',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (39,13,45,1,'59','2019-03-22 07:44:16',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (40,13,46,1,'59','2019-03-22 07:44:16',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (41,14,50,1,'80','2019-03-22 07:44:55',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (42,14,49,1,'75','2019-03-22 07:44:55',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (43,14,47,1,'59','2019-03-22 07:44:55',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (44,15,18,1,'110','2019-03-22 07:45:28',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (45,15,35,1,'20','2019-03-22 07:45:28',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (46,16,30,1,'90','2019-03-22 07:45:42',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (47,16,27,2,'90','2019-03-22 07:45:42',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (48,17,23,1,'115','2019-03-22 09:34:29',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (49,17,37,1,'25','2019-03-22 09:34:29',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (50,18,8,1,'120','2019-03-22 09:49:45',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (51,18,5,1,'120','2019-03-22 09:49:45',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (52,18,51,1,'85','2019-03-22 09:49:45',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (53,19,13,1,'125','2019-03-22 09:50:49',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (54,19,14,1,'125','2019-03-22 09:50:49',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (55,19,12,1,'125','2019-03-22 09:50:49',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (56,20,18,1,'110','2019-03-22 09:54:49',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (57,20,17,1,'110','2019-03-22 09:54:49',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (58,20,48,1,'60','2019-03-22 09:54:49',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (59,21,44,2,'20','2019-03-22 09:56:56',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (60,22,43,8,'15','2019-03-22 09:57:53',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (61,23,15,1,'100','2019-03-22 17:07:52',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (62,23,18,1,'110','2019-03-22 17:07:52',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (63,24,27,1,'90','2019-03-23 02:11:30',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (64,24,28,1,'90','2019-03-23 02:11:30',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (65,24,33,1,'90','2019-03-23 02:11:30',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (66,24,49,1,'75','2019-03-23 02:11:30',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (67,25,28,2,'90','2019-03-23 02:12:17',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (68,25,29,1,'90','2019-03-23 02:12:18',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (69,26,1,1,'120','2019-03-30 09:25:19',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (70,27,1,1,'120','2019-03-30 09:26:01',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (71,27,2,1,'120','2019-03-30 09:26:01',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (72,28,27,1,'90','2019-03-30 09:26:32',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (73,28,28,1,'90','2019-03-30 09:26:32',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (74,29,16,1,'110','2019-03-30 09:49:55',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (75,30,32,1,'90','2019-03-30 14:58:07',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (76,31,1,1,'120','2019-03-30 14:59:36',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (77,32,29,1,'90','2019-03-30 16:01:00',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (78,33,29,1,'90','2019-03-30 16:01:10',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (79,34,10,2,'125','2019-03-30 16:03:35',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (80,35,1,1,'120','2019-03-31 04:49:20',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (81,35,2,1,'120','2019-03-31 04:49:20',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (82,35,52,1,'120','2019-03-31 04:49:20',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (83,35,63,1,'120','2019-03-31 04:49:20',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (84,36,28,1,'90','2019-03-31 12:34:21',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (85,36,30,1,'90','2019-03-31 12:34:21',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (86,37,18,1,'110','2019-03-31 12:37:42',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (87,37,21,1,'110','2019-03-31 12:37:42',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (88,37,16,1,'110','2019-03-31 12:37:42',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (89,38,17,1,'110','2019-04-01 09:49:02',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (90,38,66,1,'10','2019-04-01 09:49:02',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (91,39,51,1,'85','2019-04-01 10:17:43',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (92,39,50,1,'80','2019-04-01 10:17:43',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (93,39,66,1,'10','2019-04-01 10:17:43',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (94,40,11,1,'125','2019-04-01 13:32:10',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (95,41,5,1,'120','2019-04-02 15:07:31',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (96,42,45,1,'59','2019-04-02 15:22:52',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (97,43,45,1,'59','2019-04-02 15:22:52',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (98,44,30,2,'91','2019-04-02 15:38:44',NULL,NULL);
+INSERT INTO "transactionitems_tb" VALUES (99,45,8,2,'120','2019-04-05 20:45:51',NULL,NULL);
+INSERT INTO "category_tb" VALUES (1,'Bunny''s Little Secret',1,'2019-03-18 09:34:30','2019-03-20 04:24:43',NULL);
+INSERT INTO "category_tb" VALUES (2,'Bunny Shakers',1,'2019-03-18 09:34:53','2019-03-20 04:24:44',NULL);
+INSERT INTO "category_tb" VALUES (3,'Milktea Series',1,'2019-03-18 09:35:08','2019-03-20 04:24:45',NULL);
+INSERT INTO "category_tb" VALUES (4,'Lemonade Collections',1,'2019-03-18 09:35:23','2019-03-20 04:24:46',NULL);
+INSERT INTO "category_tb" VALUES (5,'Add-Ons',1,'2019-03-18 09:35:39','2019-03-20 04:24:47',NULL);
+INSERT INTO "category_tb" VALUES (6,'Snacks',1,'2019-03-18 09:35:51','2019-04-01 15:22:06',NULL);
+INSERT INTO "category_tb" VALUES (7,'Deserts',1,'2019-03-31 17:06:04','2019-04-02 15:12:07',1);
+CREATE TRIGGER [UpdateLastTimeforproduct]
+AFTER UPDATE
+ON product_tb
+FOR EACH ROW
+BEGIN
+UPDATE product_tb SET last_updated = CURRENT_TIMESTAMP WHERE id = old.id;
+END;
+CREATE TRIGGER [UpdateLastTimeforaddons]
+AFTER UPDATE
+ON addons_tb
+FOR EACH ROW
+BEGIN
+UPDATE addons_tb SET last_updated = CURRENT_TIMESTAMP WHERE id = old.id;
+END;
+CREATE TRIGGER [UpdateLastTimefortransaction]
+AFTER UPDATE
+ON transaction_tb
+FOR EACH ROW
+BEGIN
+UPDATE transaction_tb SET last_updated = CURRENT_TIMESTAMP WHERE id = old.id;
+END;
+CREATE TRIGGER [UpdateLastTimeforusers]
+AFTER UPDATE
+ON users_tb
+FOR EACH ROW
+BEGIN
+UPDATE users_tb SET last_updated = CURRENT_TIMESTAMP WHERE id = old.id;
+END;
+CREATE TRIGGER [UpdateLastTimeforcodelibrary]
+AFTER UPDATE
+ON codelibrary_tb
+FOR EACH ROW
+BEGIN
+UPDATE codelibrary_tb SET last_updated = CURRENT_TIMESTAMP WHERE id = old.id;
+END;
+CREATE TRIGGER [UpdateLastTimeforuserslevel]
+AFTER UPDATE
+ON userslevel_tb
+FOR EACH ROW
+BEGIN
+UPDATE userslevel_tb SET last_updated = CURRENT_TIMESTAMP WHERE id = old.id;
+END;
+CREATE TRIGGER [UpdateLastTimefortransactionitems]
+AFTER UPDATE
+ON transactionitems_tb
+FOR EACH ROW
+BEGIN
+UPDATE transactionitems_tb SET last_updated = CURRENT_TIMESTAMP WHERE id = old.id;
+END;
+CREATE TRIGGER [UpdateLastTimeforcategory]
+AFTER UPDATE
+ON category_tb
+FOR EACH ROW
+BEGIN
+UPDATE category_tb SET last_updated = CURRENT_TIMESTAMP WHERE id = old.id;
+END;
+COMMIT;

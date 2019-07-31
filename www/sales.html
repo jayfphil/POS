@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" type="text/css" href="./css/nocss/bootstrap-4.3.1.min.css">
+    <link rel="stylesheet" type="text/css" href="./css/nocss/data-table.css">
+    <link rel="stylesheet" type="text/css" href="./css/nocss/calculator.css">
+  </head>
+  <body>
+
+    <div class="container-fluid">
+      <div class="row">
+        
+          <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+            <table>
+              
+            </table>
+          </div>
+          <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+            
+            <div class="calc-container">
+              <div class="calc-body calculator">
+                <div class="calc-screen">
+                  <div class="calc-operation history"></div>
+                  <div class="screen">
+                    <span class="last"></span>
+                    <span class="calc-typed total">0</span>
+                  </div>
+                </div>
+                <div class="calc-button-row">
+                  <button class="calc-button c calc_cls imp" value="C/E" >CE</button>
+                  <button class="calc-button l calc_his imp" value="H">HIS</button>
+                  <button class="calc-button l calc_neg imp" value="-/+" >&plusmn;</button>
+                  <button class="calc-button l calc_bac imp" value="&larr;" >&larr;</button>
+                </div>
+                <div class="calc-button-row">
+                  <button class="calc-button calc_int" value="7">7</button>
+                  <button class="calc-button calc_int" value="8">8</button>
+                  <button class="calc-button calc_int" value="9">9</button>
+                  <button class="calc-button l calc_op imp" value="*">x</button>
+                </div>
+                <div class="calc-button-row">
+                  <button class="calc-button calc_int" value="4">4</button>
+                  <button class="calc-button calc_int" value="5">5</button>
+                  <button class="calc-button calc_int" value="6">6</button>
+                  <button class="calc-button l calc_op imp" value="-">−</button>
+                </div>
+                <div class="calc-button-row">
+                  <button class="calc-button calc_int" value="1">1</button>
+                  <button class="calc-button calc_int" value="2">2</button>
+                  <button class="calc-button calc_int" value="3">3</button>
+                  <button class="calc-button l calc_op imp" value="+">+</button>
+                </div>
+                <div class="calc-button-row">
+                  <button class="calc-button calc_dec" value=".">.</button>
+                  <button class="calc-button calc_int" value="7">0</button>
+                  <button class="calc-button l calc_eval imp" value="=">=</button>
+                  <button class="calc-button l calc_op imp" value="/">/</button>
+                </div>
+              </div>
+              <ul style="display:none" class="history-list"></ul>
+            </div>
+
+          </div>
+
+      </div>
+    </div>
+
+    
+  </body>
+  <footer>
+    <span id="date_time"></span>
+  </footer>
+</html>
+
+<script src="./js/nojs/jquery-3.3.1.slim.min.js"></script>
+<script src="./js/nojs/popper.min.js"></script>
+<script src="./js/nojs/bootstrap.min.js"></script>
+
+<script src="./js/nojs/jquery-1.12.4.js"></script>
+<script src="./js/nojs/jquery.dataTables-1.10.19.js"></script>
+<script src="./js/nojs/calc.js"></script>
+<script src="./js/nojs/realtimedate.js"></script>
+<script type="text/javascript">window.onload = date_time('date_time');</script>

@@ -1,0 +1,140 @@
+ <div class="navbar-default sidebar" role="navigation">
+                <div class="sidebar-nav navbar-collapse">
+                    <ul class="nav" id="side-menu">
+                        <li class="sidebar-search">
+                            Navigation
+                            <!-- /input-group -->
+                        </li>
+                        <li>
+                            <a href="index.php"><i class="fa fa-home fa-fw"></i> A</a>
+                        </li>
+                        <li>
+                            <a href="samples/phpinfo.php"><i class="fa fa-info fa-fw"></i> B</a>
+                        </li>
+                        <li>
+                            <a href="files.php"><i class="fa fa-file-code-o fa-fw"></i> C</a>
+                        </li>
+                        <!-- <li>
+                            <a href="#"><i class="fa fa-cogs fa-fw"></i> PHP Demos<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="savingfiles.php"><i class="fa fa-floppy-o fa-fw"></i> Saving Files</a>
+                                </li>
+                                <li>
+                                    <a href="databases.php"><i class="fa fa-database fa-fw"></i> Databases</a>
+                                </li>
+                                <li>
+                                    <a href="extensions.php"><i class="fa fa-puzzle-piece fa-fw"></i> PHP Extensions</a>
+                                </li>
+                                <li>
+                                    <a href="curl.php">cURL extension</a>
+                                </li>
+                                <li>
+                                    <a href="session_cookies.php">Session and Cookies</a>
+                                </li>
+                                <li>
+                                    <a href="global-variables.php">Global Variables</a>
+                                </li>
+                                <li>
+                                    <a href="security.php"><i class="fa fa-unlock-alt fa-fw"></i> PHP Code Security</a>
+                                </li>
+                                <li>
+                                    <a href="upload.php">File Upload</a>
+                                </li>
+                                <li>
+                                    <a href="contactform.php">AJAX Demo - Contact Form</a>
+                                </li>
+                            </ul>
+
+                        </li>  -->
+                        <!-- /.nav-second-level -->
+                       <li>
+                            <a href="hescript.php"><i class="fa fa-magic fa-fw"></i> D</a>
+                        </li>
+                        <li>
+                            <a href="ui-interaction.php"><i class="fa fa-desktop fa-fw"></i> E</a>
+                        </li>
+                        <!-- <li>
+                            <a href="flashswf.php"><i class="fa fa-file-video-o fa-fw"></i> Flash - SWF</a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-wrench fa-fw"></i> HTML5 demo<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="html5video.php">Video</a>
+                                </li>
+                                <li>
+                                    <a href="youtube-video.php">YouTube Video</a>
+                                </li>
+                                <li>
+                                    <a href="html5audio.php">Audio</a>
+                                </li>
+                                <li>
+                                    <a href="notifications.php">Notifications</a>
+                                </li>
+                                <li>
+                                    <a href="html5storage.php">Storage</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-picture-o fa-fw"></i> HTML5 Canvas<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="mengersponge.php">3D menger sponge fractal</a>
+                                </li>
+                                <li>
+                                    <a href="html5charts.php">Charts</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="http://www.exeoutput.com" target="_blank"><i class="fa fa-magic fa-fw"></i> ExeOutput Home (popup)</a>
+                        </li>  -->
+
+                      <?php /*  <li>
+                            <a href="#"><i class="fa fa-sitemap fa-fw"></i> Multi-Level Dropdown<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="#">Second Level Item</a>
+                                </li>
+                                <li>
+                                    <a href="#">Second Level Item</a>
+                                </li>
+                                <li>
+                                    <a href="#">Third Level <span class="fa arrow"></span></a>
+                                    <ul class="nav nav-third-level">
+                                        <li>
+                                            <a href="#">Third Level Item</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Third Level Item</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Third Level Item</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Third Level Item</a>
+                                        </li>
+                                    </ul>
+                                    <!-- /.nav-third-level -->
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-files-o fa-fw"></i> Sample Pages<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="blank.html">Blank Page</a>
+                                </li>
+                                <li>
+                                    <a href="login.html">Login Page</a>
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li> */ ?>
+                    </ul>
+                </div>
+                <!-- /.sidebar-collapse -->
+            </div>

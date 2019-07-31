@@ -1,0 +1,175 @@
+/* Toggle Styles */
+    
+      #wrapper {
+          padding-left: 0;
+    /*      -webkit-transition: all 0.5s ease;
+          -moz-transition: all 0.5s ease;
+          -o-transition: all 0.5s ease;
+          transition: all 0.5s ease;*/
+      }
+
+      #wrapper.toggled {
+          padding-left: 250px;
+      }
+
+      #sidebar-wrapper {
+          /*z-index: 1000;*/
+          position: fixed;
+          left: 250px;
+          width: 0;
+          height: 100%;
+          margin-left: -250px;
+          overflow-y: auto;
+          background: #3A4655;
+/*          -webkit-transition: all 0.5s ease;
+          -moz-transition: all 0.5s ease;
+          -o-transition: all 0.5s ease;
+          transition: all 0.5s ease;*/
+          box-shadow: 0 8px 50px -7px black;
+      }
+
+      #wrapper.toggled #sidebar-wrapper {
+          width: 250px;
+      }
+
+      #page-content-wrapper {
+          width: 100%;
+          position: absolute;
+          padding: 15px;
+      }
+
+      #wrapper.toggled #page-content-wrapper {
+          position: absolute;
+          margin-right: -250px;
+      }
+
+      /* Sidebar Styles */
+
+      .sidebar-nav {
+          position: absolute;
+          top: 0;
+          width: 250px;
+          height:50%;
+          margin: 0;
+          padding: 0;
+          list-style: none;
+          overflow: auto;
+      }
+
+      .sidebar-nav li {
+          text-indent: 20px;
+          line-height: 40px;
+      }
+
+      .sidebar-nav li a {
+          display: block;
+          text-decoration: none;
+          color: #999999;
+      }
+
+      .sidebar-nav li a:hover:not(.sideclose) {
+          text-decoration: none;
+          color: #fff;
+          background: rgba(255,255,255,0.2);
+      }
+
+      .sidebar-nav li a:active,
+      .sidebar-nav li a:focus {
+          text-decoration: none;
+      }
+
+      .sidebar-brand {
+          height: 65px;
+          /*font-size: 18px;*/
+          line-height: 60px;
+      }
+
+      .sidebar-brand label {
+          color: #fff;
+          background: none;
+          position:fixed;
+          -webkit-animation: glow 1s ease-in-out infinite alternate;
+          -moz-animation: glow 1s ease-in-out infinite alternate;
+          animation: glow 1s ease-in-out infinite alternate;
+          display: -webkit-flex; /* Safari */
+          -webkit-flex-wrap: wrap; /* Safari 6.1+ */
+          display: flex;   
+          flex-wrap: wrap;
+      }
+
+        @-webkit-keyframes glow {
+          from {
+            text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #e60073, 0 0 40px #e60073, 0 0 50px #e60073, 0 0 60px #e60073, 0 0 70px #e60073;
+          }
+          to {
+            text-shadow: 0 0 20px #fff, 0 0 30px #ff4da6, 0 0 40px #ff4da6, 0 0 50px #ff4da6, 0 0 60px #ff4da6, 0 0 70px #ff4da6, 0 0 80px #ff4da6;
+          }
+        }
+
+      @media(min-width:468px) {
+          #wrapper {
+              padding-left: 250px;
+          }
+
+          #wrapper.toggled {
+              padding-left: 0;
+          }
+
+          #sidebar-wrapper {
+              width: 250px;
+          }
+
+          #wrapper.toggled #sidebar-wrapper {
+              width: 0;
+          }
+
+          #page-content-wrapper {
+              padding: 20px;
+              position: relative;
+          }
+
+          #wrapper.toggled #page-content-wrapper {
+              position: relative;
+              margin-right: 0;
+          }
+      }
+
+      /* Fixed/sticky icon bar */
+      .icon-bar {
+        /*width: 15%;*/
+        left: 2.5%;
+        position: fixed;
+        top: 90%;
+        -webkit-transform: translateY(-50%);
+        -ms-transform: translateY(-50%);
+        transform: translateY(-50%);
+      }
+
+      /* Style the icon bar img */
+
+      a img {
+        width: 25px;
+      }
+
+      .icon-bar span {
+        background-color:red;
+        font-family: 'Roboto', sans-serif;
+      }
+
+      .btn-danger {
+        margin:2.5px;
+        border-radius: 100%;
+        font-weight: bold;
+      }
+
+      .btn-success {
+        /*margin:2.5px;
+        border-radius: 100%;*/
+        font-weight: bold;
+      }
+
+      .grayscale { 
+        -webkit-filter: opacity(.5) drop-shadow(0 0 0 red);
+        filter: opacity(.5) drop-shadow(0 0 0 red);
+        margin-right: 5px;
+      }

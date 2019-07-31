@@ -1,0 +1,617 @@
+(function ($) {
+ "use strict";
+  
+  $(document).ready(function() {
+
+    var datatable = $('#data-table-transact').DataTable( {
+        "bPaginate": false,
+        "bLengthChange": false,
+        "bFilter": false,
+        "bInfo": false,
+        "bAutoWidth": false,
+        "columns": [
+          {
+            "class": 'details-control',
+            "orderable": false,
+            "data": null,
+            "defaultContent": ''
+          },
+          { "name": "name" },
+          { "name": "code" },
+          { "name": "price" },
+          { "name": "discount" },
+          { "name": "action" },
+          { "name": "addons" }
+        ],
+        "columnDefs": [
+            {
+                "targets": [ 6 ],
+                "visible": false,
+                "searchable": false
+            }
+        ],
+    } );
+
+    datatable.on('click', 'td.details-control', function () {
+        var tr = $(this).closest('tr');
+        var row = datatable.row( tr );
+     
+        if ( row.child.isShown() ) {
+          // This row is already open - close it
+          row.child.hide();
+          tr.removeClass('shown');
+        }
+        else {
+          // Open this row
+          row.child( format(row.data()) ).show();
+          tr.addClass('shown');
+     
+          //debug
+          // console.log(format(row.data()));
+        }
+      } );
+
+    var datatable_pending = $('#data-table-pending').DataTable( {
+        "pageLength": 5,
+        "bPaginate": true,
+        "bLengthChange": false,
+        "bFilter": true,
+        "bInfo": false,
+        "bAutoWidth": false 
+    } );
+
+    $('#data-table-inventory, #data-table-category, #data-table-customers').DataTable( {
+        "pageLength": 5,
+        "bPaginate": true,
+        "bLengthChange": false,
+        "bFilter": true,
+        "bInfo": false,
+        "bAutoWidth": false 
+    } );
+
+    $('.addtolist').on('click', function () {
+       
+        auto_clone($(this),datatable);
+ 
+    });
+
+    $('#apply_discount').on('click', function () {
+
+        var drate = $("#disc_rate").val();
+        var drow = $("#disc_rate").attr("disc-rowno");
+        var amountdue = parseFloat($("#amountdue").text());
+        var origprice = parseFloat($('#hiddenclear').find("input[name='products["+drow+"][price]']").val());
+
+        $("#amountdue").text(amountdue-origprice);
+        $("a[data-discrow='"+drow+"']").html("<b>"+drate+"%</b>");
+        $('#hiddenclear').find("input[name='products["+drow+"][discount]']").val(drate);
+              
+        var dec = (parseFloat(drate) / 100).toFixed(2); //its convert 10 into 0.10
+        var mult = origprice * dec; // gives the value for subtract from main 
+
+        var discounted = origprice-mult;
+
+        $("#discount_"+drow).text(discounted);
+
+        var amountdue = parseFloat($("#amountdue").text()); // gets the latest then added with discount
+        $("#amountdue").text(amountdue+discounted);
+
+        $("#discounts_modal").find("button[data-dismiss='modal']").click();
+ 
+    });
+
+    $('#form_transaction').on('submit', function (e) {
+
+      e.preventDefault();
+      // $("#confirm_modal").modal();
+
+      var message = 'You want to submit this sale? This cannot be undone.';
+      var title = 'Confirm Payment';
+      var cashtend = parseFloat($("#cashtend").text());
+      var totalamt = parseFloat($("#totalamt").text());
+
+      // if(cashtend.indexOf('.') > -1) {
+      //   cashtend = cashtend + "00";
+      // }
+
+      if(!totalamt) {
+
+        alert("Please select an order!");
+        return false;
+
+      }
+
+      if(cashtend && cashtend >= totalamt) {
+            
+            $('<div></div>').appendTo('body')
+              .html('<div><h6>'+message+'</h6></div>')
+              .dialog({
+                  modal: true, title: title, zIndex: 10000, autoOpen: true,
+                  width: 'auto', resizable: false,
+                  buttons: {
+                      Yes: function () {
+
+                          var yesthis = $(this);
+
+                          $.ajax({
+                              type: 'post',
+                              url: 'api.php',
+                              data: $('#form_transaction').serialize()+ "&cashtend="+cashtend+"&totalamt="+totalamt,
+                              dataType: 'json',
+                              success: function (result) {
+
+                                if(result.success=1) {
+
+                                  yesthis.remove();
+                                  alert("Transaction Complete!");
+                                  
+                                  window.open('sticker_print.php?receiptno='+result.last_id, '_blank');
+                                  window.location = 'pos.php';
+
+                                }
+                               
+                              }
+                          });
+                          
+                      },
+                      No: function () {                     
+                          $(this).remove();
+                      }
+                  },
+                  close: function (event, ui) {
+                      $(this).remove();
+                  }
+              });
+
+      } else {
+
+        alert("Insufficient Cash!");
+        return false;
+
+      }
+
+    });
+
+    $('#printsample').on('click', function () {
+
+        $('#printme').show();
+        var printme = document.getElementById('printme');
+        
+        var wme = window.open("","","width=900,height=700");
+        wme.document.write(printme.outerHTML);
+        wme.document.close();
+        wme.focus();
+        wme.print();
+        wme.close();
+        $('#printme').hide();
+
+    });
+
+    $('.modals').on('click', function () {
+
+      // swal("Maintenance :","Not available at the moment!", "info");
+      $('#other_modal').modal({show:true});
+
+    });
+
+    $(document).on('click', '.done_order, .void_order, .user_logout',function (e) {
+
+      e.preventDefault();
+      var $target = $(this).closest("tr");
+      $("#confirm_modal").find("#confirmsubmit").attr("disabled",false);
+
+      if($(this).hasClass("done_order")) {
+        
+        var message = 'Are you sure it is completed?';
+        var title = 'Confirm Order';
+        var modal_type = 'done';
+
+      }
+
+      if($(this).hasClass("void_order")) {
+
+        if($(this).attr("data-user")==3) {
+          // console.log($(this).attr("data-user"));
+            $("#confirm_modal").find("#confirmsubmit").attr("disabled",true);
+
+            var message = 'Enter Password : <input type="password" id="incharge_pass"> <button id="incharge_key" class="btn btn-info">Ok</button>';
+            var title = 'Confirm to Team Leader or Admin';
+            var modal_type = 'void';
+        } else {
+            var message = 'Are you sure you want to void this transaction?';
+            var title = 'Confirm Void';
+            var modal_type = 'void';
+        }
+
+      }
+
+      if($(this).hasClass("user_logout")) {
+        
+        var message = 'Are you sure you want to log out?';
+        var title = 'Logging Out';
+        var modal_type = 'logout';
+
+      }
+
+        $("#confirm_modal h5").text(title);
+        $("#confirm_modal .modal-body").html(message);
+        $("#confirmsubmit").attr("data-type",modal_type);
+        $("#confirmsubmit").attr("data-id",$(this).attr("data-id"));
+        $target.addClass("datatable_mark_"+$(this).attr("data-id"));
+       
+    });
+
+    $(document).on('click', '#confirmsubmit',function (e) {
+
+        var datatype = $(this).attr("data-type");
+
+        if(datatype=="logout") {
+
+          window.location = 'login.php?logout=1';
+
+        } else {
+
+            if(datatype=="done") {
+              var databoolean = "done="+$(this).attr("data-id");
+              var datamsg = "Ordered has successfully complete!";
+              datatable_pending.row($(".datatable_mark_"+$(this).attr("data-id")).closest("tr")).remove().draw( false ); 
+              window.open('sticker_print.php?productno='+$(this).attr("data-id"), '_blank');
+            }
+
+            if(datatype=="void") {
+              var databoolean = "void="+$(this).attr("data-id");
+              var datamsg = "Transaction has successfully voided!";
+              datatable_pending.row($(".datatable_mark_"+$(this).attr("data-id")).closest("tr")).remove().draw( false ); 
+            }
+            
+            $.ajax({
+                  type: 'post',
+                  url: 'api.php',
+                  data: databoolean,
+                  dataType: 'json',
+                  success: function (result) {
+
+                    if(result.success=1) {
+
+                      // alert(datamsg);
+                      $("#pending_count").text(parseFloat($("#pending_count").text())-1);
+                      
+
+                    }
+                   
+                  }
+              });
+
+        }
+
+    });
+
+    $(document).on('click', '.discitem',function (e) {
+
+      e.preventDefault();
+      $("#disc_rate").val("");
+      $('#discounts_modal').find("label[for='disc_rate']").text("Discount Item No. "+(parseFloat($(this).attr("data-discrow"))+1)+" : "+$(this).attr("data-name"));
+      $('#discounts_modal').find("#disc_rate").attr("disc-rowno",$(this).attr("data-discrow"));
+       
+    }); 
+
+    $(document).on('click', '.dropitem',function (e) {
+
+      e.preventDefault();
+      remove_clone($(this),datatable);
+       
+    }); 
+
+    $(document).on('change', '.onchange_free',function (e) {
+
+      var totalamt = parseFloat($("#totalamt").text());
+      var amountdue = parseFloat($("#amountdue").text());
+
+      var split_val = $(this).val().split("-");
+      var stock_free = $(this).attr("data-freestock");
+      var split_free = $(this).attr("data-freecompare").split("-");
+      var addons_set = $(".addonsqty-"+split_val[0]).first();
+      var addons_cnt = $(".addonsqty-"+split_val[0]);
+
+      // if(parseFloat(addons_set.text())==0) {
+      //     alert("Out of Stock!");
+
+      //     $(this).val($(this).attr("data-freecompare"));
+      //     $(this).change();
+
+      //     return false;
+      // }
+
+      // Bug
+      if($(this).attr("data-freecompare")!=$(this).val()) {
+          addons_cnt.text(parseFloat(addons_set.text())-1);
+      }
+
+      if(stock_free) {
+          var split_stock = stock_free.split("-");
+          var addons_setfree = $(".addonsqty-"+split_stock[0]).first();
+          var addons_cntfree = $(".addonsqty-"+split_stock[0]);
+          addons_cntfree.text(parseFloat(addons_setfree.text())+1);
+      }
+
+      if(split_val[1]>split_free[1]) {
+
+          var freevalue=parseFloat(split_val[1])-parseFloat(split_free[1]);
+
+          if(stock_free) {
+            totalamt = free_addons(totalamt,stock_free);
+            amountdue = free_addons(amountdue,stock_free);
+          }
+
+          $(this).attr("data-freestock",split_val[0]+"-"+freevalue);
+          $("."+$(this).attr("id")).val(split_val[0]+"-"+freevalue);
+          $("span."+$(this).attr("id")).css("display","inline").text("+"+freevalue);
+
+          totalamt = totalamt + freevalue;
+          amountdue = amountdue + freevalue;
+
+      } else {
+        if(stock_free) {
+            totalamt = free_addons(totalamt,stock_free);
+            amountdue = free_addons(amountdue,stock_free);
+            $(this).attr("data-freestock",null);
+            $("."+$(this).attr("id")).val(split_val[0]+"-0");
+            $("span."+$(this).attr("id")).css("display","none").text("+0");
+        }
+      }
+
+      $("#totalamt").text(totalamt.toFixed(2));
+      $("#amountdue").text(amountdue.toFixed(2));
+       
+    });
+
+    $(document).on('click', '#incharge_key',function (e) {
+
+        $.ajax({
+            type: 'get',
+            url: 'api.php',
+            data: "password="+$("#incharge_pass").val(),
+            dataType: 'json',
+            success: function (result) {
+           
+              if(result.success==1) {
+
+                $("#confirm_modal").find("#confirmsubmit").attr("disabled",false);
+                $("#confirm_modal h5").text("Confirm Void");
+                $("#confirm_modal .modal-body").html("Are you sure you want to void this transaction?");
+
+              } else {
+                $("#confirm_modal .modal-body").html('Enter Password : <input type="password" id="incharge_pass"> <button id="incharge_key" class="btn btn-info">Ok</button> <span style="display:inline;" class="badge badge-warning">Invalid Password!</span>');
+              }
+             
+            }
+        });
+        
+         
+      });
+
+    $(document).on('click', '.addons_exec',function (e) {
+
+      var totalamt = parseFloat($("#totalamt").text());
+      var amountdue = parseFloat($("#amountdue").text());
+
+      var addsons_id = $(this).attr("data-id");
+      var addons_set = $(".addonsqty-"+addsons_id).first();
+      var addons_cnt = $(".addonsqty-"+addsons_id);
+      var addson_srp = parseFloat($("#addonsprice-"+addsons_id).text());
+
+      if($(this).prop("checked")) {
+
+        // if(parseFloat(addons_set.text())==0) {
+        //   alert("Out of Stock!");
+        //   return false;
+        // }
+      
+        addons_cnt.text(parseFloat(addons_set.text())-1);
+        totalamt = totalamt + addson_srp;
+        amountdue = amountdue + addson_srp;
+      } else {
+        addons_cnt.text(parseFloat(addons_set.text())+1);
+        totalamt = totalamt - addson_srp;
+        amountdue = amountdue - addson_srp;
+      }
+      
+      $("#totalamt").text(totalamt.toFixed(2));
+      $("#amountdue").text(amountdue.toFixed(2));
+       
+    });
+
+  });
+
+    // function cuteHide(el) {
+    //   el.animate({opacity: '0'}, 150, function(){
+    //     el.animate({height: '0px'}, 150, function(){
+    //       el.remove();
+    //     });
+    //   });
+    // }
+
+    function free_addons(totalamt,freestock){
+
+        var split_stock = freestock.split("-");
+        totalamt = totalamt - parseFloat(split_stock[1]);
+        return totalamt;
+
+    }
+
+    function remove_clone(content,datatable){
+
+      var cnt = parseFloat($('#hiddenclear').find("#"+content.attr("data-id")).val())-1;
+      counts(content.attr("data-id"),cnt);
+
+      var totalamt = parseFloat($("#totalamt").text()) - parseFloat($('#hiddenclear').find("input[name='products["+content.attr("data-row")+"][price]']").val());
+      var amountdue = parseFloat($("#amountdue").text()) - parseFloat($('#hiddenclear').find("input[name='products["+content.attr("data-row")+"][price]']").val());
+
+      if($("#free"+content.attr("data-row")+"-"+content.attr("data-id")).attr("data-freestock")) {
+          var split_deduct = $("#free"+content.attr("data-row")+"-"+content.attr("data-id")).attr("data-freestock").split("-");
+          totalamt = totalamt-split_deduct[1];
+          amountdue = amountdue-split_deduct[1];
+      }
+
+      if($("input[name*='addons["+content.attr("data-row")+"]["+content.attr("data-id")+"]']").length > 0) {
+          $( "input[name*='addons["+content.attr("data-row")+"]["+content.attr("data-id")+"]']:checked" ).each(function( index ) {
+            var addson_srp = parseFloat($("#addonsprice-"+$(this).attr("data-id")).text());
+            totalamt = totalamt-addson_srp;
+            amountdue = amountdue-addson_srp;
+          });
+      }
+
+      var $target = content.closest("tr");
+      $('#hiddenclear').find(".hidden_"+content.attr("data-id")).remove();
+      datatable.row($target).remove().draw( false ); 
+
+      $("#totalamt").text(totalamt.toFixed(2));
+      $("#amountdue").text(amountdue.toFixed(2));
+      $("#"+content.attr("data-count")).text(parseFloat($("#"+content.attr("data-count")).text())+1);
+      
+    }
+
+    function auto_clone(content,datatable){
+
+        var $clone = content.clone();
+
+        $.ajax({
+            type: 'get',
+            url: 'api.php',
+            data: "product_id="+$clone.attr("data-id"),
+            dataType: 'json',
+            success: function (result) {
+
+              if($('#hiddenclear').find("#"+$clone.attr("data-id")).length > 0) {
+                var cnt = parseFloat($('#hiddenclear').find("#"+$clone.attr("data-id")).val())+1;
+                counts($clone.attr("data-id"),cnt);
+              } else {
+                var cnt = 1;
+                $('#hiddenclear').append("<input type='hidden' id='"+$clone.attr("data-id")+"' class='hidden_"+$clone.attr("data-id")+"' value='"+cnt+"'>");
+              }
+
+              if($('#tablerow').length > 0) {
+                var tb_row = parseFloat($('#tablerow').val())+1;
+                $('#tablerow').val(tb_row);
+              }
+              else {
+                var tb_row = 0;
+                $('#hiddenclear').append("<input type='hidden' id='tablerow' value='0'>");
+              }
+
+              var qty = parseFloat(result.products.quantity);
+              var flag = null;
+
+              $('#hiddenclear').append("<input type='hidden' name='products["+tb_row+"][price]' class='hidden_"+$clone.attr("data-id")+"' value='"+$clone.attr("data-price")+"'><input type='hidden' name='products["+tb_row+"][identifier]' class='hidden_"+$clone.attr("data-id")+"' value='"+$clone.attr("data-id")+"'><input type='hidden' name='products["+tb_row+"][discount]' value='0'>");
+              var total_p = parseFloat($clone.attr("data-price"));
+              var totalamt = parseFloat($("#totalamt").text()) + total_p;
+
+              // if(cnt > qty) {
+              //   alert("Out of Stock!");
+              //   return false;
+              // }
+
+              if(result.addons) {
+                flag=result.addons;
+              }
+
+              // Create dom element
+              datatable.row.add( [
+                    null,
+                    $clone.attr("data-name"),
+                    $clone.attr("data-code"),
+                    "<span id='discount_"+tb_row+"'>"+parseFloat($clone.attr("data-price")).toFixed(2)+"</span>",
+                    "<a href='#' class='discitem' data-toggle='modal' data-target='#discounts_modal' data-discrow='"+tb_row+"' data-name='"+$clone.attr("data-name")+"'><b>"+0+"%</b></a>",
+                    "<a href='#' class='dropitem' data-free='"+result.products.addons_flag+"' data-row='"+tb_row+"' data-count='"+$clone.attr("data-count")+"' data-id='"+$clone.attr("data-id")+"'><img src='images/cross.png' title='Remove' class='img-responsive'></a>",
+                    flag
+              ] ).draw( false );
+
+              $("#totalamt").text(totalamt.toFixed(2));
+              $("#amountdue").text(totalamt.toFixed(2));
+              $("#"+$clone.attr("data-count")).text(parseFloat($("#"+$clone.attr("data-count")).text())-1);
+             
+            }
+        });
+
+    }
+
+    function counts(ids,count) {
+
+        $('#hiddenclear').find("#"+ids).val(count);
+        $('#data-table-transact > tbody:last-child').find("#cnt_"+ids).parent().html("<input type='hidden' id='cnt_"+ids+"'>"+count);
+        // $('#data-table-transact > tbody:last-child').find("#totalp_"+ids).parent().html("<input type='hidden' id='totalp_"+ids+"' value='"+total+"'>"+total.toFixed(2));
+    
+    }
+
+    var format = function( d ) {
+      var product_id = $($.parseHTML(d[5])).filter('a').attr('data-id');
+      var row_number = $($.parseHTML(d[5])).filter('a').attr('data-row');
+      var free = $($.parseHTML(d[5])).filter('a').attr('data-free');
+
+      var here = "";
+      var stack_free=0;
+      var stack_flag=false;
+
+      if(d[6].length>0) {
+
+        var addons = d[6];
+
+        for(var n in addons) { 
+
+            if(addons[n].id==free) {
+              stack_free=free+"-"+addons[n].price;
+              stack_flag=true;
+            }
+
+        }
+
+        here += '<div class="col-sm-6"><div class="row align-items-center p-1">' +
+                      '<div class="col-sm-4">Sugar Level</div>'+
+                      '<div class="col-sm-8"><select name="products['+row_number+'][sugar_level]"><option>No Sugar</option><option>25% Sugar</option><option>50% Sugar</option><option>75% Sugar</option><option>100% Sugar</option></select></div>'+
+                    '</div></div>';
+
+        if(stack_flag) {
+
+            here += '<div class="col-sm-6"><div class="row align-items-center p-1">' +
+                        '<div class="col-sm-4">Free Addons</div>'+
+                        '<div class="col-sm-8"><select id="free'+row_number+'-'+product_id+'" data-freecompare="'+stack_free+'" class="onchange_free">';
+                
+            for(var c in addons) { 
+
+                if(addons[c].id==free) { 
+                    here += '<option selected value="'+addons[c].id+'-'+addons[c].price+'">'+addons[c].addons_name+'</option>';
+                } else {
+                    here += '<option value="'+addons[c].id+'-'+addons[c].price+'">'+addons[c].addons_name+'</option>';
+                }
+
+            }
+            
+            here += '</select><span style="display:none;" class="badge badge-warning free'+row_number+'-'+product_id+' "></span><input type="hidden" class="free'+row_number+'-'+product_id+'" name="addons['+row_number+']['+product_id+'][free]" value="'+addons[c].id+'-0">'; 
+            here += '</div></div></div>';
+
+        } else {
+            here += '<div class="col-sm-6">&nbsp;</div>';
+        }
+
+        for(var i in addons) { 
+
+            if($(".addonsqty-"+addons[i].id).length > 0) {
+                addons[i].quantity = $(".addonsqty-"+addons[i].id).first().text();
+            }
+
+            here += '<div class="col-sm-4"><div class="row align-items-center p-1">' +
+                      '<div class="col-sm-3"><label class="switch"><input type="checkbox" class="addons_exec" data-id="'+addons[i].id+'" name="addons['+row_number+']['+product_id+']['+addons[i].id+']" value="'+addons[i].price+'"><span class="slider round"></span></label></div>'+
+                      '<div class="col-sm-2"><span id="addonsprice-'+addons[i].id+'">' + parseFloat(addons[i].price).toFixed(2) + '</span> </div>'+
+                      '<div class="col-sm-7">' + addons[i].addons_name + '</div>'+
+                    '</div></div>';
+
+            // <span style="display:inline !important;" class="badge badge-warning addonsqty-'+addons[i].id+'">'+addons[i].quantity+'</span>
+        }
+
+        here = '<div class="addons-fonts container"><div class="row">'+here+'</div></div>';
+      }
+      
+      return here;
+    };
+ 
+})(jQuery); 
